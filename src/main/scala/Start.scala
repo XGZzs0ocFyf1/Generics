@@ -14,6 +14,8 @@ case class CatDto(id: Long, name: String, medicalDataId: MedicalData, dispositio
 case class DogDto(id: Long, name: String, medicalDataId: MedicalData, weight: Double) extends PetDto(id, name, medicalDataId)
 
 
+case class Wrapper[A <: PetDto](petDto: A, someData: String)
+
 object Conversions{
   def toDto[A <: Pet](in: A): PetDto with Product = {
     in.getClass.getSimpleName match {
@@ -29,6 +31,19 @@ object Conversions{
       case _ => throw new RuntimeException("Unknown pet type")
     }
   }
+
+  def wrap[A <: PetDto](petDto: A): Wrapper[ _ <: PetDto] = {
+    Wrapper(petDto, "wrapped")
+  }
+
+  def wrap1[A <: PetDto](petDto: A): Wrapper[PetDto] = {
+    Wrapper(petDto, "wrapped")
+  }
+
+
+
+
+
 }
 
 
@@ -42,6 +57,12 @@ object Start extends App{
 
   println(barsikDto)
   println(marlyDto)
+
+  println(wrap(barsikDto))
+  println(wrap(marlyDto))
+
+  println(wrap1(barsikDto))
+  println(wrap1(marlyDto))
 
 
 }
